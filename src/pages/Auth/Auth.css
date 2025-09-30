@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-.login-page {
+.auth-page {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +13,7 @@
     padding: 2rem;
 }
 
-.login-form-container {
+.auth-form-container {
     background-color: #fff;
     padding: 2rem 2.5rem;
     border-radius: 12px;
@@ -23,30 +23,30 @@
     text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
 }
-.login-form-container:hover {
+.auth-form-container:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 25px rgba(0,0,0,0.15);
 }
 
-.login-title {
+.auth-title {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
     color: #2f3640;
 }
 
-.form-group {
+.auth-form .form-group {
     margin-bottom: 1rem;
     text-align: left;
 }
 
-.form-group label {
+.auth-form .form-group label {
     display: block;
     margin-bottom: 0.3rem;
     font-weight: 500;
     color: #2f3640;
 }
 
-.login-input {
+.auth-input {
     width: 100%;
     padding: 0.8rem 1rem;
     border-radius: 8px;
@@ -55,13 +55,13 @@
     transition: border-color 0.2s, box-shadow 0.2s;
     display: block;
 }
-.login-input:focus {
+.auth-input:focus {
     outline: none;
     border-color: #646cff;
     box-shadow: 0 0 5px rgba(100, 108, 255, 0.3);
 }
 
-.login-button {
+.auth-button {
     width: 100%;
     padding: 0.8rem;
     border: none;
@@ -72,30 +72,53 @@
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
 }
-.login-button:hover {
+.auth-button:hover {
     background-color: #535bf2;
     transform: translateY(-2px);
 }
 
-.login-footer {
+.auth-footer {
     margin-top: 1rem;
     font-size: 0.9rem;
     color: #888;
 }
-.login-footer a {
+.auth-footer a {
     color: #646cff;
     text-decoration: none;
     font-weight: 500;
 }
-.login-footer a:hover {
+.auth-footer a:hover {
     text-decoration: underline;
 }
 
 @media (max-width: 480px) {
-    .login-form-container {
+    .auth-form-container {
         padding: 1.5rem 1.5rem;
     }
-    .login-title {
+    .auth-title {
         font-size: 1.5rem;
     }
+}
+
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.show-password-btn {
+    position: absolute;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: #646cff;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
+}
+
+.show-password-btn:hover {
+    text-decoration: underline;
 }

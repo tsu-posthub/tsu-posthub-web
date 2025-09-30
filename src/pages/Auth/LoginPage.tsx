@@ -2,18 +2,23 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import * as React from "react";
-import "./LoginPage.css";
+import { PostHubSDK } from "ts-posthub-sdk/src";
+import "./Auth.css";
 
 export default function LoginPage() {
-    const { sdk, login } = useAuth();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         try {
+            const sdk = new PostHubSDK();
+            
             const res = await sdk.auth.login({ email, password });
+            
             login(res.access, res.refresh);
             navigate("/");
         } catch (err) {
@@ -22,37 +27,49 @@ export default function LoginPage() {
     }
 
     return (
-        <main className="login-page">
-            <section className="login-form-container">
-                <h1 className="login-title">Вход</h1>
-                <form onSubmit={handleSubmit} className="login-form">
+        <main className="auth-page">
+            <section className="auth-form-container">
+                <h1 className="auth-title">Вход</h1>
+                <form onSubmit={handleSubmit} className="auth-form">
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
                             id="email"
                             type="email"
                             placeholder="Введите ваш email"
-                            className="login-input"
+                            className="auth-input"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
-                    <div className="form-group">
+
+                    <div className="form-group password-group">
                         <label htmlFor="password">Пароль</label>
-                        <input
-                            id="password"
-                            type="password"
-                            placeholder="Введите пароль"
-                            className="login-input"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                        <div className="password-wrapper">
+                            <input
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Введите пароль"
+                                className="auth-input"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="show-password-btn"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                            >
+                                {showPassword ? "Скрыть" : "Показать"}
+                            </button>
+                        </div>
                     </div>
-                    <button type="submit" className="login-button">Войти</button>
+
+                    <button type="submit" className="auth-button">Войти</button>
                 </form>
-                <p className="login-footer">
+
+                <p className="auth-footer">
                     Нет аккаунта? <a href="/register">Зарегистрироваться</a>
                 </p>
             </section>
