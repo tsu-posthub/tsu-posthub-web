@@ -130,12 +130,22 @@ export default function ProfilePage() {
                     </div>
                 ) : (
                     <>
-                        <h1 className="profile-username">{profile.username}</h1>
+                        <h1 className="profile-username" title={profile.username}>
+                            {profile.username}
+                        </h1>
                         <p className="profile-email">{profile.email}</p>
 
                         <div className="profile-info">
-                            {profile.first_name && <p><span>Имя:</span> {profile.first_name}</p>}
-                            {profile.last_name && <p><span>Фамилия:</span> {profile.last_name}</p>}
+                            {profile.first_name && (
+                                <p title={profile.first_name}>
+                                    <span>Имя:</span> {profile.first_name}
+                                </p>
+                            )}
+                            {profile.last_name && (
+                                <p title={profile.last_name}>
+                                    <span>Фамилия:</span> {profile.last_name}
+                                </p>
+                            )}
                         </div>
 
                         <button className="edit-button" onClick={() => setIsEditing(true)}>

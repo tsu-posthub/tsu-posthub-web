@@ -35,6 +35,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .profile-username {
@@ -42,6 +45,11 @@
     font-weight: 600;
     color: #2f3640;
     margin-bottom: 0.3rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .profile-email {
@@ -60,6 +68,11 @@
     margin: 0.5rem 0;
     font-size: 0.95rem;
     color: #333;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 .profile-info span {
     font-weight: 500;
