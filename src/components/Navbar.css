@@ -18,6 +18,7 @@
 
 .navbar-container {
     display: flex;
+    align-items: center;
 }
 
 .navbar-logo {
@@ -59,11 +60,11 @@
 }
 
 .navbar-auth {
-    margin-left: auto;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     gap: 1rem;
+    flex: 1;
 }
 
 .navbar-login {
@@ -125,8 +126,10 @@
 
 @media (max-width: 768px) {
     .hamburger {
-        display: block;
+        display: flex;
         margin-right: 0;
+        justify-content: flex-start;
+        flex: 1;
     }
 
     .navbar-container {
@@ -139,7 +142,7 @@
     }
 
     .navbar-logo {
-        margin: 0 auto;
+        margin: 0;
         justify-content: center;
     }
 
@@ -172,6 +175,8 @@
         display: flex;
         gap: 1rem;
         align-items: center;
+        justify-content: flex-end;
+        flex: 1;
     }
 
     .navbar-links.open,
