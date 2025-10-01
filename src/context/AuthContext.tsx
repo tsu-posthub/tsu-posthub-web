@@ -5,65 +5,58 @@ interface AuthContextType {
     sdk: PostHubSDK;
     accessToken: string | null;
     username: string | null;
-    login: (access: string, refresh: string) => void;
-    logout: () => void;
+    login: (access: string, refresh: string) => Promise<void>;
+    logout: () => Promise<void>;
     refreshAccess: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [accessToken, setAccessToken] = useState<string | null>(
-        localStorage.getItem("access")
-    );
-    const [refreshToken, setRefreshToken] = useState<string | null>(
-        localStorage.getItem("refresh")
-    );
-    const [username, setUsername] = useState<string | null>(
-        localStorage.getItem("username")
-    );
+    const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("access"));
+    const [refreshToken, setRefreshToken] = useState<string | null>(localStorage.getItem("refresh"));
+    const [username, setUsername] = useState<string | null>(localStorage.getItem("username"));
     const [refreshTimer, setRefreshTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
     
-    const sdk = useMemo(() => new PostHubSDK(), []);
-
+    const sdk = useMemo(() => new PostHubSDK(accessToken || undefined), []);
+    
     useEffect(() => {
-        sdk.setToken(accessToken || "");
+        if (accessToken) sdk.setToken(accessToken);
     }, [accessToken, sdk]);
     
     useEffect(() => {
-        if (accessToken) localStorage.setItem("access", accessToken);
-        else localStorage.removeItem("access");
-
-        if (refreshToken) localStorage.setItem("refresh", refreshToken);
-        else localStorage.removeItem("refresh");
-
-        if (username) localStorage.setItem("username", username);
-        else localStorage.removeItem("username");
+        accessToken ? localStorage.setItem("access", accessToken) : localStorage.removeItem("access");
+        refreshToken ? localStorage.setItem("refresh", refreshToken) : localStorage.removeItem("refresh");
+        username ? localStorage.setItem("username", username) : localStorage.removeItem("username");
     }, [accessToken, refreshToken, username]);
 
     useEffect(() => {
         if (!accessToken || !refreshToken) return;
 
-        try {
-            const payload = JSON.parse(atob(accessToken.split(".")[1]));
-            if (payload.exp) {
+        const scheduleRefresh = async () => {
+            try {
+                const payload = JSON.parse(atob(accessToken.split(".")[1]));
                 const expMs = payload.exp * 1000;
                 const now = Date.now();
                 const refreshDelay = expMs - now - 60 * 1000;
 
                 if (refreshDelay > 0) {
                     if (refreshTimer) clearTimeout(refreshTimer);
-                    const timer = setTimeout(refreshAccess, refreshDelay);
+                    const timer = setTimeout(async () => {
+                        await refreshAccess();
+                    }, refreshDelay);
                     setRefreshTimer(timer);
                 } else {
-                    (async () => {
-                        await refreshAccess();
-                    })();
+                    await refreshAccess();
                 }
+            } catch (err) {
+                console.error("Failed to decode token", err);
             }
-        } catch (err) {
-            console.error("Failed to decode token", err);
-        }
+        };
+        
+        (async () => {
+            await scheduleRefresh();
+        })();
 
         return () => {
             if (refreshTimer) clearTimeout(refreshTimer);
@@ -100,12 +93,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const refreshAccess = async () => {
         if (!refreshToken) return;
         try {
-            console.log("Updating the access token...");
+            console.log("Refreshing access token...");
             const data = await sdk.auth.refresh({ refresh: refreshToken });
-            console.log("Access token successfully updated");
             
+            setAccessToken(data.access);
             sdk.setToken(data.access);
             localStorage.setItem("access", data.access);
+            console.log("Access token updated successfully");
         } catch (err) {
             console.error("Failed to refresh token", err);
             await logout();
@@ -113,9 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider
-            value={{ sdk, accessToken, username, login, logout, refreshAccess }}
-        >
+        <AuthContext.Provider value={{ sdk, accessToken, username, login, logout, refreshAccess }}>
             {children}
         </AuthContext.Provider>
     );

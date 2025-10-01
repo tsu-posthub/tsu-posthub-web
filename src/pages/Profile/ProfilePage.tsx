@@ -50,10 +50,10 @@ export default function ProfilePage() {
         (async () => {
             await fetchProfile();
         })();
-    }, [sdk, accessToken, navigate]);
+    }, [sdk]);
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         navigate("/login");
     };
 
