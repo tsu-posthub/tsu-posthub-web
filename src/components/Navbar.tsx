@@ -39,12 +39,14 @@ export default function Navbar() {
 
                 <div className={`navbar-login`}>
                     {!accessToken ? (
-                        <Link to="/login" className="login-link">
-                            Войти
+                        <Link to="/login" className="login-link-wrapper">
+                            <span className="login-link">Войти</span>
                         </Link>
                     ) : (
-                        <Link to="/profile" className="login-link" onClick={() => setOpen(false)}>
-                            {username}
+                        <Link to="/profile" className="login-link-wrapper" onClick={() => setOpen(false)}>
+                            <span className="login-link username-text" title={username || ""}>
+                                {username}
+                            </span>
                         </Link>
                     )}
                 </div>
@@ -68,8 +70,10 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Link to="/profile" className="login-link" onClick={() => setOpen(false)}>
-                                {username}
+                            <Link to="/profile" className="login-link-wrapper" onClick={() => setOpen(false)}>
+                                <span className="login-link username-text" title={username || ""}>
+                                    {username}
+                                </span>
                             </Link>
                         </>
                     )}

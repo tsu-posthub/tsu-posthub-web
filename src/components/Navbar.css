@@ -92,6 +92,15 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
+.username-text {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .register-btn {
     font-weight: 500;
     text-decoration: none;
@@ -197,6 +206,10 @@
         margin-top: 0.5rem;
         border-top-color: rgba(255, 255, 255, 0.3);
         border-radius: 0;
+    }
+
+    .username-text {
+        max-width: 100px;
     }
 
     .register-btn {
