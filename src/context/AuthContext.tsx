@@ -27,8 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const sdk = useMemo(() => new PostHubSDK(), []);
 
     useEffect(() => {
-        if (accessToken) sdk.setToken(accessToken); 
-        else sdk.setToken("");
+        sdk.setToken(accessToken || "");
     }, [accessToken, sdk]);
     
     useEffect(() => {
@@ -74,9 +73,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const login = async (access: string, refresh: string) => {
         setAccessToken(access);
         setRefreshToken(refresh);
+        sdk.setToken(access);
 
         try {
-            const profile = await new PostHubSDK(access).profile.getProfile();
+            const profile = await sdk.profile.getProfile();
             setUsername(profile.username);
         } catch (err) {
             console.error("Failed to fetch profile", err);
@@ -94,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAccessToken(null);
         setRefreshToken(null);
         setUsername(null);
+        sdk.setToken("");
     };
 
     const refreshAccess = async () => {
@@ -102,7 +103,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.log("Updating the access token...");
             const data = await sdk.auth.refresh({ refresh: refreshToken });
             console.log("Access token successfully updated");
-            setAccessToken(data.access);
+            
+            sdk.setToken(data.access);
+            localStorage.setItem("access", data.access);
         } catch (err) {
             console.error("Failed to refresh token", err);
             await logout();
