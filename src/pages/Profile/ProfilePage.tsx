@@ -22,7 +22,25 @@ export default function ProfilePage() {
         last_name: ""
     });
     const [loading, setLoading] = useState(false);
+    const [showLoader, setShowLoader] = useState(false);
+    const [loaded, setLoaded] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (profile) {
+            const timeout = window.setTimeout(() => setLoaded(true), 50);
+            return () => clearTimeout(timeout);
+        }
+    }, [profile]);
+    
+    useEffect(() => {
+        if (!loading) {
+            setShowLoader(false);
+            return;
+        }
+        const timer = window.setTimeout(() => setShowLoader(true), 400);
+        return () => clearTimeout(timer);
+    }, [loading]);
 
     useEffect(() => {
         if (!accessToken) {
@@ -81,18 +99,20 @@ export default function ProfilePage() {
             setLoading(false);
         }
     };
-
-    if (loading || !profile) return (
-        <main className="profile-page">
-            <Loader />
-        </main>
-    );
+    
+    if (showLoader && !profile) {
+        return (
+            <main className="profile-page">
+                <Loader />
+            </main>
+        );
+    }
 
     return (
         <main className="profile-page">
-            <section className="profile-card">
+            <section className={`profile-card ${loaded ? "loaded" : ""}`}>
                 <div className="profile-avatar">
-                    {profile.username.charAt(0).toUpperCase()}
+                    {profile?.username.charAt(0).toUpperCase()}
                 </div>
 
                 {isEditing ? (
@@ -130,18 +150,18 @@ export default function ProfilePage() {
                     </div>
                 ) : (
                     <>
-                        <h1 className="profile-username" title={profile.username}>
-                            {profile.username}
+                        <h1 className="profile-username" title={profile?.username}>
+                            {profile?.username}
                         </h1>
-                        <p className="profile-email">{profile.email}</p>
+                        <p className="profile-email">{profile?.email}</p>
 
                         <div className="profile-info">
-                            {profile.first_name && (
+                            {profile?.first_name && (
                                 <p title={profile.first_name}>
                                     <span>Имя:</span> {profile.first_name}
                                 </p>
                             )}
-                            {profile.last_name && (
+                            {profile?.last_name && (
                                 <p title={profile.last_name}>
                                     <span>Фамилия:</span> {profile.last_name}
                                 </p>
