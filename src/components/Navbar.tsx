@@ -1,7 +1,7 @@
-﻿import { Link, useNavigate } from "react-router-dom";
+﻿import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Squeeze as Hamburger } from "hamburger-react";
-import { useState } from "react";
 import posthubLogo from "../assets/posthub_logo.svg";
 import "./Navbar.css";
 
@@ -9,6 +9,7 @@ export default function Navbar() {
     const { accessToken, logout } = useAuth();
     const navigate = useNavigate();
     const [isOpen, setOpen] = useState(false);
+    const navRef = useRef<HTMLElement | null>(null);
 
     const handleLogout = async () => {
         logout();
@@ -16,8 +17,23 @@ export default function Navbar() {
         setOpen(false);
     };
 
+    useEffect(() => {
+        if (!navRef.current) return;
+
+        const updateHeight = () => {
+            const height = navRef.current?.offsetHeight || 0;
+            document.documentElement.style.setProperty("--navbar-height", `${height}px`);
+        };
+
+        updateHeight();
+        const observer = new ResizeObserver(updateHeight);
+        observer.observe(navRef.current);
+
+        return () => observer.disconnect();
+    }, []);
+
     return (
-        <nav className="navbar">
+        <nav className="navbar" ref={navRef}>
             <div className="navbar-container">
                 <div className="hamburger">
                     <Hamburger toggled={isOpen} toggle={setOpen} size={24} color="#fff" />
@@ -30,11 +46,9 @@ export default function Navbar() {
 
                 <div className={`navbar-login`}>
                     {!accessToken ? (
-                        <>
-                            <Link to="/login" className="login-link">
-                                Войти
-                            </Link>
-                        </>
+                        <Link to="/login" className="login-link">
+                            Войти
+                        </Link>
                     ) : (
                         <button onClick={handleLogout} className="logout-btn">
                             Выйти

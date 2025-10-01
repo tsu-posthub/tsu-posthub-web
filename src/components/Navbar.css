@@ -1,4 +1,9 @@
-﻿.navbar {
+﻿body {
+    padding-top: var(--navbar-height);
+}
+
+.navbar {
+    --navbar-height: 68px;
     width: 100%;
     background-color: #646cff;
     padding: 1rem 2rem;
@@ -118,10 +123,6 @@
     background-color: rgba(255,255,255,0.35);
 }
 
-body {
-    padding-top: 60px;
-}
-
 @media (max-width: 768px) {
     .hamburger {
         display: block;
@@ -148,13 +149,19 @@ body {
 
     .navbar-links,
     .navbar-auth {
-        display: none;
+        display: flex;
         flex-direction: column;
         width: 100%;
         background-color: #646cff;
-        padding: 1rem;
-        margin-top: 0.5rem;
+        padding: 0 1rem;
+        margin-top: 0;
         border-radius: 8px;
+
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(-10px);
+        transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease, padding 0.3s ease;
     }
 
     .navbar-auth .login-link {
@@ -171,9 +178,15 @@ body {
     .navbar-auth.open {
         display: flex;
     }
-    
-    .navbar-auth.open .logout-btn {
-        display: none;
+
+    .navbar-links.open,
+    .navbar-auth.open {
+        display: flex;
+        max-height: 500px;
+        opacity: 1;
+        transform: translateY(0);
+        padding: 1rem;
+        margin-top: 0.5rem;
     }
 
     .register-btn {
