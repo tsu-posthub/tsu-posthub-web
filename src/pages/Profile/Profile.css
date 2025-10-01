@@ -84,16 +84,91 @@
     transform: translateY(-2px);
 }
 
+.edit-form input {
+    margin: 0.5rem 0;
+    display: block;
+}
+
+.edit-form .save-button,
+.edit-form .cancel-button,
+.edit-button {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.edit-form .save-button {
+    background-color: #646cff;
+    color: #fff;
+}
+
+.edit-form .save-button:hover {
+    background-color: #535bf2;
+    transform: translateY(-2px);
+}
+
+.edit-form .cancel-button {
+    background-color: #ccc;
+    color: #333;
+}
+
+.edit-form .cancel-button:hover {
+    background-color: #aaa;
+    transform: translateY(-2px);
+}
+
+.edit-button {
+    background-color: #ffd32a;
+    color: #2f3640;
+    margin-top: 1rem;
+}
+
+.edit-button:hover {
+    background-color: #ffca00;
+    transform: translateY(-2px);
+}
+
 @media (max-width: 480px) {
     .profile-card {
-        padding: 1.5rem;
+        padding: 1.5rem 1.5rem;
+        max-width: 90%;
     }
+
     .profile-avatar {
         width: 70px;
         height: 70px;
         font-size: 1.8rem;
+        margin-bottom: 0.8rem;
     }
+
     .profile-username {
         font-size: 1.3rem;
+    }
+
+    .profile-email {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .profile-info p {
+        font-size: 0.85rem;
+    }
+
+    .edit-form input {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+
+    .edit-form .save-button,
+    .edit-form .cancel-button,
+    .edit-button {
+        font-size: 0.95rem;
+        padding: 0.7rem;
     }
 }
