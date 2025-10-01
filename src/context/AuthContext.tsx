@@ -24,7 +24,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
     const [refreshTimer, setRefreshTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
     
-    const sdk = useMemo(() => new PostHubSDK(accessToken || undefined), [accessToken]);
+    const sdk = useMemo(() => new PostHubSDK(), []);
+
+    useEffect(() => {
+        if (accessToken) sdk.setToken(accessToken); 
+        else sdk.setToken("");
+    }, [accessToken, sdk]);
     
     useEffect(() => {
         if (accessToken) localStorage.setItem("access", accessToken);
@@ -95,8 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!refreshToken) return;
         try {
             console.log("Updating the access token...");
-            const refreshSdk = new PostHubSDK();
-            const data = await refreshSdk.auth.refresh({ refresh: refreshToken });
+            const data = await sdk.auth.refresh({ refresh: refreshToken });
             console.log("Access token successfully updated");
             setAccessToken(data.access);
         } catch (err) {
