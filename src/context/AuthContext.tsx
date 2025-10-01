@@ -4,6 +4,7 @@ import { PostHubSDK } from "ts-posthub-sdk/src";
 interface AuthContextType {
     sdk: PostHubSDK;
     accessToken: string | null;
+    username: string | null;
     login: (access: string, refresh: string) => void;
     logout: () => void;
     refreshAccess: () => Promise<void>;
@@ -18,26 +19,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [refreshToken, setRefreshToken] = useState<string | null>(
         localStorage.getItem("refresh")
     );
-    const [sdk] = useState(() => new PostHubSDK(accessToken || undefined));
+    const [username, setUsername] = useState<string | null>(
+        localStorage.getItem("username")
+    );
+    const [sdk, setSdk] = useState(() => new PostHubSDK(accessToken || undefined));
+
+    useEffect(() => {
+        const newSdk = new PostHubSDK(accessToken || undefined);
+        setSdk(newSdk);
+    }, [accessToken]);
     
     useEffect(() => {
-        if (accessToken) {
-            sdk.setToken(accessToken);
-            localStorage.setItem("access", accessToken);
-        } else {
-            localStorage.removeItem("access");
-        }
+        if (accessToken) localStorage.setItem("access", accessToken);
+        else localStorage.removeItem("access");
 
-        if (refreshToken) {
-            localStorage.setItem("refresh", refreshToken);
-        } else {
-            localStorage.removeItem("refresh");
-        }
-    }, [accessToken, refreshToken, sdk]);
+        if (refreshToken) localStorage.setItem("refresh", refreshToken);
+        else localStorage.removeItem("refresh");
+
+        if (username) localStorage.setItem("username", username);
+        else localStorage.removeItem("username");
+    }, [accessToken, refreshToken, username, sdk]);
+
+    useEffect(() => {
+        if (!refreshToken) return;
+        const interval = setInterval(async () => {
+            await refreshAccess();
+        }, 1000 * 60 * 4);
+        return () => clearInterval(interval);
+    }, [refreshToken]);
     
-    const login = (access: string, refresh: string) => {
+    const login = async (access: string, refresh: string) => {
         setAccessToken(access);
         setRefreshToken(refresh);
+
+        try {
+            const newSdk = new PostHubSDK(access);
+            setSdk(newSdk);
+            
+            const profile = await newSdk.profile.getProfile();
+            setUsername(profile.username);
+        } catch (err) {
+            console.error("Failed to fetch profile", err);
+        }
     };
     
     const logout = async () => {
@@ -50,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         setAccessToken(null);
         setRefreshToken(null);
+        setUsername(null);
     };
     
     const refreshAccess = async () => {
@@ -65,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return (
         <AuthContext.Provider
-            value={{ sdk, accessToken, login, logout, refreshAccess }}
+            value={{ sdk, accessToken, username, login, logout, refreshAccess }}
         >
             {children}
         </AuthContext.Provider>

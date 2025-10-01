@@ -1,21 +1,20 @@
 ﻿import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Squash as Hamburger } from "hamburger-react";
 import posthubLogo from "../assets/posthub_logo.svg";
 import "./Navbar.css";
 
 export default function Navbar() {
-    const { accessToken, logout } = useAuth();
-    const navigate = useNavigate();
+    const { accessToken, username } = useAuth();
     const [isOpen, setOpen] = useState(false);
     const navRef = useRef<HTMLElement | null>(null);
 
-    const handleLogout = async () => {
-        logout();
-        navigate("/login");
-        setOpen(false);
-    };
+    // const handleLogout = async () => {
+    //     logout();
+    //     navigate("/login");
+    //     setOpen(false);
+    // };
 
     useEffect(() => {
         if (!navRef.current) return;
@@ -50,9 +49,12 @@ export default function Navbar() {
                             Войти
                         </Link>
                     ) : (
-                        <button onClick={handleLogout} className="logout-btn">
-                            Выйти
-                        </button>
+                        // <button onClick={handleLogout} className="logout-btn">
+                        //     Выйти
+                        // </button>
+                        <Link to="/profile" className="login-link" onClick={() => setOpen(false)}>
+                            {username}
+                        </Link>
                     )}
                 </div>
 
@@ -74,9 +76,14 @@ export default function Navbar() {
                             </Link>
                         </>
                     ) : (
-                        <button onClick={handleLogout} className="logout-btn">
-                            Выйти
-                        </button>
+                        <>
+                            <Link to="/profile" className="login-link" onClick={() => setOpen(false)}>
+                                {username}
+                            </Link>
+                            {/*<button onClick={handleLogout} className="logout-btn">*/}
+                            {/*    Выйти*/}
+                            {/*</button>*/}
+                        </>
                     )}
                 </div>
             </div>
