@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.getItem("username")
     );
     const [sdk, setSdk] = useState(() => new PostHubSDK(accessToken || undefined));
+    const [refreshTimer, setRefreshTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         const newSdk = new PostHubSDK(accessToken || undefined);
@@ -41,12 +42,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [accessToken, refreshToken, username, sdk]);
 
     useEffect(() => {
-        if (!refreshToken) return;
-        const interval = setInterval(async () => {
-            await refreshAccess();
-        }, 1000 * 60 * 4);
-        return () => clearInterval(interval);
-    }, [refreshToken]);
+        if (!accessToken || !refreshToken) return;
+
+        try {
+            const payload = JSON.parse(atob(accessToken.split(".")[1]));
+            if (payload.exp) {
+                const expMs = payload.exp * 1000;
+                const now = Date.now();
+                const refreshDelay = expMs - now - 60 * 1000;
+
+                if (refreshDelay > 0) {
+                    if (refreshTimer) clearTimeout(refreshTimer);
+                    const timer = setTimeout(async () => {
+                        await refreshAccess();
+                    }, refreshDelay);
+                    setRefreshTimer(timer);
+                } else {
+                    (async () => {
+                        await refreshAccess();
+                    })();
+                }
+            }
+        } catch (err) {
+            console.error("Failed to decode token", err);
+        }
+
+        return () => {
+            if (refreshTimer) clearTimeout(refreshTimer);
+        };
+    }, [accessToken, refreshToken]);
     
     const login = async (access: string, refresh: string) => {
         setAccessToken(access);
@@ -75,11 +99,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setRefreshToken(null);
         setUsername(null);
     };
-    
+
     const refreshAccess = async () => {
         if (!refreshToken) return;
         try {
+            console.log("Updating the access token...");
             const data = await sdk.auth.refresh({ refresh: refreshToken });
+            console.log("Access token successfully updated");
             setAccessToken(data.access);
         } catch (err) {
             console.error("Failed to refresh token", err);

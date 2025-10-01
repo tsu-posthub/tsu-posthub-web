@@ -1,0 +1,99 @@
+﻿.profile-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f5f6fa;
+    padding: 2rem;
+}
+
+.profile-card {
+    background: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.profile-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin: 0 auto 1rem auto;
+    background: linear-gradient(135deg, #646cff, #535bf2);
+    color: #fff;
+    font-size: 2.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-username {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #2f3640;
+    margin-bottom: 0.3rem;
+}
+
+.profile-email {
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: 1.2rem;
+}
+
+.profile-info {
+    text-align: left;
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+.profile-info p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+.profile-info span {
+    font-weight: 500;
+    color: #2f3640;
+}
+
+.logout-button {
+    margin-top: 1.5rem;
+    padding: 0.8rem;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff4757;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.logout-button:hover {
+    background-color: #e84118;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        padding: 1.5rem;
+    }
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+    }
+    .profile-username {
+        font-size: 1.3rem;
+    }
+}

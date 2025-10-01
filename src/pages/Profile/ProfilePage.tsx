@@ -1,6 +1,8 @@
 ﻿import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import "./Profile.css";
+import Loader from "../../components/Loader.tsx";
 
 type ProfileType = {
     username: string;
@@ -34,36 +36,39 @@ export default function ProfilePage() {
         })();
     }, [sdk, accessToken, navigate]);
 
-    const handleLogout = async () => {
+    const handleLogout = () => {
         logout();
         navigate("/login");
     };
 
-    if (!profile) return <p>Загрузка профиля...</p>;
+    if (!profile) return (
+        <main className="profile-page">
+            <Loader />
+        </main>
+    );
 
     return (
-        <main className="profile-page" style={{ padding: "2rem" }}>
-            <h1>Профиль</h1>
-            <p><strong>Никнейм:</strong> {profile.username}</p>
-            <p><strong>Email:</strong> {profile.email}</p>
-            {profile.first_name && <p><strong>Имя:</strong> {profile.first_name}</p>}
-            {profile.last_name && <p><strong>Фамилия:</strong> {profile.last_name}</p>}
+        <main className="profile-page">
+            <section className="profile-card">
+                <div className="profile-avatar">
+                    {profile.username.charAt(0).toUpperCase()}
+                </div>
+                <h1 className="profile-username">{profile.username}</h1>
+                <p className="profile-email">{profile.email}</p>
 
-            <button
-                onClick={handleLogout}
-                style={{
-                    marginTop: "1.5rem",
-                    padding: "0.5rem 1rem",
-                    borderRadius: "6px",
-                    border: "none",
-                    backgroundColor: "#646cff",
-                    color: "#fff",
-                    fontWeight: 500,
-                    cursor: "pointer"
-                }}
-            >
-                Выйти
-            </button>
+                <div className="profile-info">
+                    {profile.first_name && (
+                        <p><span>Имя:</span> {profile.first_name}</p>
+                    )}
+                    {profile.last_name && (
+                        <p><span>Фамилия:</span> {profile.last_name}</p>
+                    )}
+                </div>
+
+                <button onClick={handleLogout} className="logout-button">
+                    Выйти
+                </button>
+            </section>
         </main>
     );
 }

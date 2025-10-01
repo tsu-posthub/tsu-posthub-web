@@ -10,12 +10,6 @@ export default function Navbar() {
     const [isOpen, setOpen] = useState(false);
     const navRef = useRef<HTMLElement | null>(null);
 
-    // const handleLogout = async () => {
-    //     logout();
-    //     navigate("/login");
-    //     setOpen(false);
-    // };
-
     useEffect(() => {
         if (!navRef.current) return;
 
@@ -49,9 +43,6 @@ export default function Navbar() {
                             Войти
                         </Link>
                     ) : (
-                        // <button onClick={handleLogout} className="logout-btn">
-                        //     Выйти
-                        // </button>
                         <Link to="/profile" className="login-link" onClick={() => setOpen(false)}>
                             {username}
                         </Link>
@@ -80,9 +71,6 @@ export default function Navbar() {
                             <Link to="/profile" className="login-link" onClick={() => setOpen(false)}>
                                 {username}
                             </Link>
-                            {/*<button onClick={handleLogout} className="logout-btn">*/}
-                            {/*    Выйти*/}
-                            {/*</button>*/}
                         </>
                     )}
                 </div>
