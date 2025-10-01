@@ -5,6 +5,7 @@ interface AuthContextType {
     sdk: PostHubSDK;
     accessToken: string | null;
     username: string | null;
+    setUsername?: (username: string | null) => void;
     login: (access: string, refresh: string) => Promise<void>;
     logout: () => Promise<void>;
     refreshAccess: () => Promise<void>;
@@ -107,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ sdk, accessToken, username, login, logout, refreshAccess }}>
+        <AuthContext.Provider value={{ sdk, accessToken, username, setUsername, login, logout, refreshAccess }}>
             {children}
         </AuthContext.Provider>
     );

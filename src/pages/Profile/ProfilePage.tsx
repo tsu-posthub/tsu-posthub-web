@@ -13,7 +13,7 @@ type ProfileType = {
 };
 
 export default function ProfilePage() {
-    const { sdk, accessToken, logout } = useAuth();
+    const { sdk, accessToken, logout, setUsername } = useAuth();
     const [profile, setProfile] = useState<ProfileType | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -73,6 +73,8 @@ export default function ProfilePage() {
             });
             setProfile({ ...profile, ...formData });
             setIsEditing(false);
+
+            if (setUsername) setUsername(formData.username);
         } catch (err) {
             alert("Ошибка обновления профиля: " + (err as Error).message);
         } finally {
