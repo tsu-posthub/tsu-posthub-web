@@ -1,7 +1,7 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { Squeeze as Hamburger } from "hamburger-react";
+import { Squash as Hamburger } from "hamburger-react";
 import posthubLogo from "../assets/posthub_logo.svg";
 import "./Navbar.css";
 
