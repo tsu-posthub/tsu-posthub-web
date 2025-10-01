@@ -1,0 +1,195 @@
+﻿.profile-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f5f6fa;
+    padding: 2rem;
+}
+
+.profile-card {
+    background: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.profile-card.loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.profile-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin: 0 auto 1rem auto;
+    background: linear-gradient(135deg, #646cff, #535bf2);
+    color: #fff;
+    font-size: 2.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-username {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #2f3640;
+    margin-bottom: 0.3rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.profile-email {
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: 1.2rem;
+}
+
+.profile-info {
+    text-align: left;
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+.profile-info p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    color: #333;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+.profile-info span {
+    font-weight: 500;
+    color: #2f3640;
+}
+
+.logout-button {
+    margin-top: 1.5rem;
+    padding: 0.8rem;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff4757;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.logout-button:hover {
+    background-color: #e84118;
+    transform: translateY(-2px);
+}
+
+.edit-form input {
+    margin: 0.5rem 0;
+    display: block;
+}
+
+.edit-form .save-button,
+.edit-form .cancel-button,
+.edit-button {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.edit-form .save-button {
+    background-color: #646cff;
+    color: #fff;
+}
+
+.edit-form .save-button:hover {
+    background-color: #535bf2;
+    transform: translateY(-2px);
+}
+
+.edit-form .cancel-button {
+    background-color: #ccc;
+    color: #333;
+}
+
+.edit-form .cancel-button:hover {
+    background-color: #aaa;
+    transform: translateY(-2px);
+}
+
+.edit-button {
+    background-color: #ffd32a;
+    color: #2f3640;
+    margin-top: 1rem;
+}
+
+.edit-button:hover {
+    background-color: #ffca00;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        padding: 1.5rem 1.5rem;
+        max-width: 90%;
+    }
+
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .profile-username {
+        font-size: 1.3rem;
+    }
+
+    .profile-email {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .profile-info p {
+        font-size: 0.85rem;
+    }
+
+    .edit-form input {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+
+    .edit-form .save-button,
+    .edit-form .cancel-button,
+    .edit-button {
+        font-size: 0.95rem;
+        padding: 0.7rem;
+    }
+}

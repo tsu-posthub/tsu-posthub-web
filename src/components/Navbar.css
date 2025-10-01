@@ -1,0 +1,232 @@
+﻿body {
+    padding-top: var(--navbar-height);
+}
+
+.navbar {
+    --navbar-height: 68px;
+    width: 100%;
+    background-color: #646cff;
+    padding: 1rem 2rem;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #fff;
+    text-decoration: none;
+    margin-right: 1rem;
+}
+
+.navbar-logo-img {
+    width: 32px;
+    height: 32px;
+    margin-right: 1rem;
+}
+
+.navbar-logo-text {
+    display: inline-block;
+    transition: opacity 0.2s ease;
+}
+
+.navbar-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.navbar-links a:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar-links {
+    display: flex;
+}
+
+.navbar-auth {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex: 1;
+}
+
+.navbar-login {
+    display: none;
+}
+
+.navbar-auth.open .logout-btn {
+    display: flex;
+}
+
+.hamburger {
+    display: none;
+    margin-right: 1rem;
+}
+
+.login-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.login-link:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.username-text {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.register-btn {
+    font-weight: 500;
+    text-decoration: none;
+    color: #fff;
+    background: transparent;
+    border: 1px solid #fff;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.register-btn:hover {
+    color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.7);
+    background: transparent;
+}
+
+.logout-btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 500;
+    color: #fff;
+    background-color: rgba(255,255,255,0.2);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: rgba(255,255,255,0.35);
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+        margin-right: 0;
+        justify-content: flex-start;
+        flex: 1;
+    }
+
+    .navbar-container {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .navbar-logo-text {
+        display: none;
+    }
+
+    .navbar-logo {
+        margin: 0;
+        justify-content: center;
+    }
+
+    .navbar-logo-img {
+        margin-right: 0;
+    }
+
+    .navbar-links,
+    .navbar-auth {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        background-color: #646cff;
+        padding: 0 1rem;
+        margin-top: 0;
+        border-radius: 8px;
+        align-items: flex-start;
+        text-align: left;
+
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(-10px);
+        transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease, padding 0.3s ease;
+        border-top: 1px solid transparent;
+    }
+
+    .navbar-auth .login-link {
+        display: none;
+    }
+
+    .navbar-login {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        justify-content: flex-end;
+        flex: 1;
+    }
+
+    .navbar-links.open,
+    .navbar-auth.open {
+        display: flex;
+    }
+
+    .navbar-links.open,
+    .navbar-auth.open {
+        display: flex;
+        max-height: 500px;
+        opacity: 1;
+        transform: translateY(0);
+        padding: 1rem;
+        margin-top: 0.5rem;
+        border-top-color: rgba(255, 255, 255, 0.3);
+        border-radius: 0;
+    }
+
+    .username-text {
+        max-width: 100px;
+    }
+
+    .register-btn {
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-weight: 500;
+        text-decoration: none;
+        background-color: #fff;
+        color: #646cff;
+        border: none;
+        width: 100%;
+        text-align: center;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .register-btn:hover {
+        background-color: #f3f4f6;
+        color: #4f55d1;
+    }
+}
