@@ -1,7 +1,8 @@
 ﻿import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate, Link } from "react-router-dom"
-import { Search, X, Heart } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import {ArrowDown, ArrowUp, Calendar, Heart, Search, X} from "lucide-react";
+import CustomSelect from "../../components/CustomSelect";
 import "./Posts.css";
 
 type PostType = {
@@ -114,14 +115,24 @@ export default function PostsPage() {
                     </div>
                     <div className="sort-options">
                         <span className="sort-label">Сортировать по</span>
-                        <select>
-                            <option>Дате</option>
-                            <option>Лайкам</option>
-                        </select>
-                        <select>
-                            <option>Лайкам</option>
-                            <option>Дате</option>
-                        </select>
+                        <CustomSelect
+                            options={[
+                                { label: "Дате", icon: <Calendar size={16} /> },
+                                { label: "Лайкам", icon: <Heart size={16} /> },
+                            ]}
+                            defaultValue="Дате"
+                            onChange={(val) => console.log("Сортировка:", val)}
+                            className="sort-type-select"
+                        />
+                        <CustomSelect
+                            options={[
+                                { label: "По возрастанию", icon: <ArrowUp size={16} /> },
+                                { label: "По убыванию", icon: <ArrowDown size={16} /> },
+                            ]}
+                            defaultValue="По убыванию"
+                            onChange={(val) => console.log("Направление:", val)}
+                            className="sort-direction-select"
+                        />
                     </div>
                 </div>
 
