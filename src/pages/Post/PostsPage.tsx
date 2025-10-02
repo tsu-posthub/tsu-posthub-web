@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import {ArrowDown, ArrowUp, Calendar, Heart, Plus, Search, Trash2, X} from "lucide-react";
+import {ArrowDown, ArrowUp, Calendar, Edit2, Heart, Plus, Search, Trash2, X} from "lucide-react";
 import CustomSelect from "../../components/CustomSelect";
 import "./Posts.css";
 
@@ -194,6 +194,9 @@ export default function PostsPage() {
                                         <Link to={`/edit/${post.id}`} className="edit-btn">
                                             Редактировать
                                         </Link>
+                                        <button className="edit-icon-btn" title="Редактировать">
+                                            <Edit2 size={18} />
+                                        </button>
                                         <button
                                             onClick={() => handleDelete(post.id)}
                                             className="delete-btn"
