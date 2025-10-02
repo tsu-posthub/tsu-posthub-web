@@ -222,8 +222,7 @@
     gap: 0.5rem;
 }
 
-.edit-btn,
-.delete-btn {
+.edit-btn {
     padding: 0.5rem 1rem;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -247,11 +246,41 @@
 .delete-btn {
     background-color: #ff4757;
     color: #fff;
+    border-radius: 8px;
+    border: none;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s ease;
 }
+
 .delete-btn:hover {
     background-color: #e84118;
-    transform: translateY(-2px);
+    animation: shake-bounce 0.6s ease-in-out;
     box-shadow: 0 4px 10px rgba(232, 65, 24, 0.25);
+}
+
+.delete-btn:active {
+    animation: press-down 0.2s forwards;
+}
+
+@keyframes shake-bounce {
+    0%   { transform: translateY(0) rotate(0deg); }
+    10%  { transform: translateY(-2px) rotate(-5deg); }
+    20%  { transform: translateY(-4px) rotate(5deg); }
+    30%  { transform: translateY(-6px) rotate(-5deg); }
+    40%  { transform: translateY(-4px) rotate(5deg); }
+    50%  { transform: translateY(-2px) rotate(-3deg); }
+    60%  { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes press-down {
+    0%   { transform: translateY(0) scale(1); }
+    50%  { transform: translateY(4px) scale(0.9); }
+    100% { transform: translateY(0) scale(1); }
 }
 
 .empty-text {

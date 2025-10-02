@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowDown, ArrowUp, Calendar, Heart, Search, X } from "lucide-react";
+import {ArrowDown, ArrowUp, Calendar, Heart, Search, Trash2, X} from "lucide-react";
 import CustomSelect from "../../components/CustomSelect";
 import "./Posts.css";
 
@@ -189,8 +189,9 @@ export default function PostsPage() {
                                         <button
                                             onClick={() => handleDelete(post.id)}
                                             className="delete-btn"
+                                            title="Удалить"
                                         >
-                                            Удалить
+                                            <Trash2 size={18} />
                                         </button>
                                     </div>
                                 </div>
