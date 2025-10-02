@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"
+import { Search, X, Heart } from "lucide-react";
 import "./Posts.css";
 
 type PostType = {
@@ -92,9 +93,10 @@ export default function PostsPage() {
 
                 <div className="myposts-filters">
                     <div className="search-wrapper">
+                        <Search className="search-icon" size={18} />
                         <input
                             type="text"
-                            placeholder="🔍 Поиск постов"
+                            placeholder="Поиск постов"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
@@ -106,7 +108,7 @@ export default function PostsPage() {
                                     setAnimationKey((prev) => prev + 1);
                                 }}
                             >
-                                ×
+                                <X size={18} />
                             </button>
                         )}
                     </div>
@@ -151,7 +153,10 @@ export default function PostsPage() {
                                     </div>
                                 </div>
                                 <div className="post-actions">
-                                    <span className="likes">❤️ {post.likes}</span>
+                                    <span className="likes">
+                                        <Heart size={16} fill="#e74c3c" color="#e74c3c" />
+                                        {post.likes}
+                                    </span>
                                     <div className="action-buttons">
                                         <Link to={`/edit/${post.id}`} className="edit-btn">
                                             Редактировать

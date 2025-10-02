@@ -53,11 +53,19 @@
 .search-wrapper {
     position: relative;
     flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.8rem;
+    color: #888;
 }
 
 .search-wrapper input {
-    width: 100%;
-    padding: 0.8rem 2.5rem 0.8rem 1rem;
+    width: 100%;    
+    padding: 0.8rem 2.5rem 0.8rem 2.5rem;
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 1rem;
@@ -70,10 +78,12 @@
     transform: translateY(-50%);
     background: none;
     border: none;
-    font-size: 1.2rem;
     color: #888;
     cursor: pointer;
-    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
 }
 
 .clear-btn:hover {
@@ -201,8 +211,12 @@
 }
 
 .likes {
-    font-weight: 600;
-    color: #e74c3c;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #555;
 }
 
 .action-buttons {
