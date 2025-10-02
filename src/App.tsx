@@ -7,6 +7,8 @@ import PostPage from "./pages/Post/PostPage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import Layout from "./components/Layout.tsx";
 import PostsPage from "./pages/Post/PostsPage.tsx";
+import CreatePostPage from "./pages/Post/CreatePostPage.tsx";
+import EditPostPage from "./pages/Post/EditPostPage.tsx";
 
 function App() {
     return (
@@ -17,6 +19,8 @@ function App() {
                         <Route path="/" element={<PostsPage />} />
                         <Route path="/posts/:id" element={<PostPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
+                        <Route path="/create" element={<CreatePostPage />} />
+                        <Route path="/edit/:postId" element={<EditPostPage />} />
                     </Route>
                     
                     <Route path="/login" element={<LoginPage />} />
