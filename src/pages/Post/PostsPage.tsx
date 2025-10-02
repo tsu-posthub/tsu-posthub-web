@@ -60,6 +60,12 @@ export default function PostsPage() {
         })();
     }, [sdk]);
 
+    useEffect(() => {
+        if (search === "") {
+            setAnimationKey(prev => prev + 1);
+        }
+    }, [search]);
+
     const handleDelete = async (id: number) => {
         if (!window.confirm("Удалить пост?")) return;
         try {
@@ -73,6 +79,9 @@ export default function PostsPage() {
     const filteredPosts = posts.filter((p) =>
         p.title.toLowerCase().includes(search.toLowerCase())
     );
+
+    const displayPosts = search ? filteredPosts : posts;
+    const keyBase = search ? animationKey : 0;
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString("ru-RU", {
@@ -104,10 +113,7 @@ export default function PostsPage() {
                         {search && (
                             <button
                                 className="clear-btn"
-                                onClick={() => {
-                                    setSearch("");
-                                    setAnimationKey((prev) => prev + 1);
-                                }}
+                                onClick={() => setSearch("")}
                             >
                                 <X size={18} />
                             </button>
@@ -142,9 +148,9 @@ export default function PostsPage() {
                     <p className="empty-text">Постов пока нет</p>
                 ) : (
                     <ul className="post-list">
-                        {filteredPosts.map((post, index) => (
+                        {displayPosts.map((post, index) => (
                             <li
-                                key={`${post.id}-${animationKey}`}
+                                key={`${post.id}-${keyBase}`}
                                 className="post-card"
                                 style={{ animationDelay: `${index * 0.1}s` }}
                             >
