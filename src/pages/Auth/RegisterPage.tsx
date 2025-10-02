@@ -29,7 +29,7 @@ export default function RegisterPage() {
             
             const res = await sdk.auth.login({ email, password });
             
-            login(res.access, res.refresh);
+            await login(res.access, res.refresh);
 
             navigate("/");
         } catch (err) {

@@ -52,10 +52,7 @@ export default function Navbar() {
                 </div>
 
                 <div className={`navbar-links ${isOpen ? "open" : ""}`}>
-                    <Link to="/" onClick={() => setOpen(false)}>Главная</Link>
-                    {accessToken && (
-                        <Link to="/create" onClick={() => setOpen(false)}>Создать пост</Link>
-                    )}
+                    <Link to="/" onClick={() => setOpen(false)}>Мои посты</Link>
                 </div>
 
                 <div className={`navbar-auth ${!accessToken && isOpen ? "open" : ""}`}>
