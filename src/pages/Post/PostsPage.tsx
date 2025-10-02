@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import {ArrowDown, ArrowUp, Calendar, Heart, Search, Trash2, X} from "lucide-react";
+import {ArrowDown, ArrowUp, Calendar, Heart, Plus, Search, Trash2, X} from "lucide-react";
 import CustomSelect from "../../components/CustomSelect";
 import "./Posts.css";
 
@@ -108,6 +108,7 @@ export default function PostsPage() {
                 <div className="myposts-header">
                     <h1>Мои посты</h1>
                     <button className="create-btn" onClick={() => navigate("/create")}>
+                        <Plus size={16} />
                         Создать
                     </button>
                 </div>
