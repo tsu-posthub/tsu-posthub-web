@@ -50,12 +50,34 @@
     gap: 1rem;
 }
 
-.myposts-filters input {
+.search-wrapper {
+    position: relative;
     flex: 1;
-    padding: 0.8rem 1rem;
+}
+
+.search-wrapper input {
+    width: 100%;
+    padding: 0.8rem 2.5rem 0.8rem 1rem;
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 1rem;
+}
+
+.clear-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.clear-btn:hover {
+    color: #555;
 }
 
 .sort-options {
@@ -261,5 +283,8 @@
     }
     .post-subtext {
         font-size: 0.85rem;
+    }
+    .search-wrapper input {
+        padding-right: 2rem;
     }
 }

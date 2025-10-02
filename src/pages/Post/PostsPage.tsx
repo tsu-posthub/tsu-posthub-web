@@ -17,6 +17,7 @@ export default function PostsPage() {
     const [posts, setPosts] = useState<PostType[]>([]);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
+    const [animationKey, setAnimationKey] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -85,17 +86,30 @@ export default function PostsPage() {
                 <div className="myposts-header">
                     <h1>Мои посты</h1>
                     <button className="create-btn" onClick={() => navigate("/create")}>
-                        Создать пост
+                        Создать
                     </button>
                 </div>
 
                 <div className="myposts-filters">
-                    <input
-                        type="text"
-                        placeholder="🔍 Поиск постов"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <div className="search-wrapper">
+                        <input
+                            type="text"
+                            placeholder="🔍 Поиск постов"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        {search && (
+                            <button
+                                className="clear-btn"
+                                onClick={() => {
+                                    setSearch("");
+                                    setAnimationKey((prev) => prev + 1);
+                                }}
+                            >
+                                ×
+                            </button>
+                        )}
+                    </div>
                     <div className="sort-options">
                         <span className="sort-label">Сортировать по</span>
                         <select>
@@ -117,7 +131,7 @@ export default function PostsPage() {
                     <ul className="post-list">
                         {filteredPosts.map((post, index) => (
                             <li
-                                key={post.id}
+                                key={`${post.id}-${animationKey}`}
                                 className="post-card"
                                 style={{ animationDelay: `${index * 0.1}s` }}
                             >
