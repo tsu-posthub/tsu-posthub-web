@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import {ArrowDown, ArrowUp, Calendar, Heart, Search, X} from "lucide-react";
+import { ArrowDown, ArrowUp, Calendar, Heart, Search, X } from "lucide-react";
 import CustomSelect from "../../components/CustomSelect";
 import "./Posts.css";
 
@@ -20,6 +20,8 @@ export default function PostsPage() {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [animationKey, setAnimationKey] = useState(0);
+    const [sortType, setSortType] = useState("Дате");
+    const [sortDirection, setSortDirection] = useState("По убыванию");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -61,10 +63,8 @@ export default function PostsPage() {
     }, [sdk]);
 
     useEffect(() => {
-        if (search === "") {
-            setAnimationKey(prev => prev + 1);
-        }
-    }, [search]);
+        setAnimationKey(prev => prev + 1);
+    }, [search, sortType, sortDirection]);
 
     const handleDelete = async (id: number) => {
         if (!window.confirm("Удалить пост?")) return;
@@ -80,16 +80,27 @@ export default function PostsPage() {
         p.title.toLowerCase().includes(search.toLowerCase())
     );
 
-    const displayPosts = search ? filteredPosts : posts;
-    const keyBase = search ? animationKey : 0;
+    const sortPosts = (list: PostType[]) => {
+        return [...list].sort((a, b) => {
+            let comp = 0;
+            if (sortType === "Дате") {
+                comp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+            } else if (sortType === "Лайкам") {
+                comp = a.likes - b.likes;
+            }
+            return sortDirection === "По возрастанию" ? comp : -comp;
+        });
+    };
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString("ru-RU", {
+    const displayPosts = search ? sortPosts(filteredPosts) : sortPosts(posts);
+
+
+    const formatDate = (dateString: string) =>
+        new Date(dateString).toLocaleDateString("ru-RU", {
             year: "numeric",
             month: "short",
             day: "numeric",
         });
-    };
 
     return (
         <main className="myposts-page">
@@ -111,10 +122,7 @@ export default function PostsPage() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         {search && (
-                            <button
-                                className="clear-btn"
-                                onClick={() => setSearch("")}
-                            >
+                            <button className="clear-btn" onClick={() => setSearch("")}>
                                 <X size={18} />
                             </button>
                         )}
@@ -126,8 +134,8 @@ export default function PostsPage() {
                                 { label: "Дате", icon: <Calendar size={16} /> },
                                 { label: "Лайкам", icon: <Heart size={16} /> },
                             ]}
-                            defaultValue="Дате"
-                            onChange={(val) => console.log("Сортировка:", val)}
+                            defaultValue={sortType}
+                            onChange={setSortType}
                             className="sort-type-select"
                         />
                         <CustomSelect
@@ -135,8 +143,8 @@ export default function PostsPage() {
                                 { label: "По возрастанию", icon: <ArrowUp size={16} /> },
                                 { label: "По убыванию", icon: <ArrowDown size={16} /> },
                             ]}
-                            defaultValue="По убыванию"
-                            onChange={(val) => console.log("Направление:", val)}
+                            defaultValue={sortDirection}
+                            onChange={setSortDirection}
                             className="sort-direction-select"
                         />
                     </div>
@@ -144,13 +152,13 @@ export default function PostsPage() {
 
                 {loading ? (
                     <p>Загрузка...</p>
-                ) : filteredPosts.length === 0 ? (
+                ) : displayPosts.length === 0 ? (
                     <p className="empty-text">Постов пока нет</p>
                 ) : (
                     <ul className="post-list">
                         {displayPosts.map((post, index) => (
                             <li
-                                key={`${post.id}-${keyBase}`}
+                                key={`${post.id}-${animationKey}`}
                                 className="post-card"
                                 style={{ animationDelay: `${index * 0.1}s` }}
                             >
