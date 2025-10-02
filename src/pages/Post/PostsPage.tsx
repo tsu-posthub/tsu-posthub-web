@@ -94,13 +94,20 @@ export default function PostsPage() {
 
     const displayPosts = search ? sortPosts(filteredPosts) : sortPosts(posts);
 
-
     const formatDate = (dateString: string) =>
         new Date(dateString).toLocaleDateString("ru-RU", {
             year: "numeric",
             month: "short",
             day: "numeric",
         });
+
+    const formatLikes = (num: number) => {
+        if (num >= 1_000_000_000_000) return (num / 1_000_000_000_000).toFixed(1).replace(/\.0$/, '') + 't';
+        if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'b';
+        if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'm';
+        if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+        return num.toString();
+    };
 
     return (
         <main className="myposts-page">
@@ -181,7 +188,7 @@ export default function PostsPage() {
                                 <div className="post-actions">
                                     <span className="likes">
                                         <Heart size={16} fill="#e74c3c" color="#e74c3c" />
-                                        {post.likes}
+                                        {formatLikes(post.likes)}
                                     </span>
                                     <div className="action-buttons">
                                         <Link to={`/edit/${post.id}`} className="edit-btn">
