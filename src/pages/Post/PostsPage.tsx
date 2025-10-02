@@ -1,0 +1,160 @@
+﻿import { useEffect, useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate, Link } from "react-router-dom";
+import "./Posts.css";
+
+type PostType = {
+    id: number;
+    title: string;
+    content?: string;
+    likes: number;
+    created_at: string;
+    image?: string;
+};
+
+export default function PostsPage() {
+    const { sdk, accessToken } = useAuth();
+    const [posts, setPosts] = useState<PostType[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!accessToken) {
+            navigate("/login");
+            return;
+        }
+
+        const fetchPosts = async () => {
+            try {
+                setLoading(true);
+                const data = await sdk.posts.listPosts();
+                const currentUsername = localStorage.getItem("username");
+
+                const mappedPosts: PostType[] = data
+                    .filter((p: any) => p.author_username === currentUsername)
+                    .map((p: any) => ({
+                        id: p.id,
+                        title: p.title,
+                        content: p.preview_text,
+                        likes: p.likes_count,
+                        created_at: p.created_at,
+                        image: p.thumbnail
+                            ? `https://api.tsu-posthub.orexi4.ru/${p.thumbnail}`
+                            : undefined,
+                    }));
+
+                setPosts(mappedPosts);
+            } catch (err) {
+                console.error("Ошибка загрузки постов", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        (async () => {
+            await fetchPosts();
+        })();
+    }, [sdk]);
+
+    const handleDelete = async (id: number) => {
+        if (!window.confirm("Удалить пост?")) return;
+        try {
+            await sdk.posts.deletePost(id);
+            setPosts(posts.filter((p) => p.id !== id));
+        } catch (err) {
+            alert("Ошибка удаления поста");
+        }
+    };
+
+    const filteredPosts = posts.filter((p) =>
+        p.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString("ru-RU", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    };
+
+    return (
+        <main className="myposts-page">
+            <div className="myposts-content">
+                <div className="myposts-header">
+                    <h1>Мои посты</h1>
+                    <button className="create-btn" onClick={() => navigate("/create")}>
+                        Создать пост
+                    </button>
+                </div>
+
+                <div className="myposts-filters">
+                    <input
+                        type="text"
+                        placeholder="🔍 Поиск постов"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <div className="sort-options">
+                        <span className="sort-label">Сортировать по</span>
+                        <select>
+                            <option>Дате</option>
+                            <option>Лайкам</option>
+                        </select>
+                        <select>
+                            <option>Лайкам</option>
+                            <option>Дате</option>
+                        </select>
+                    </div>
+                </div>
+
+                {loading ? (
+                    <p>Загрузка...</p>
+                ) : filteredPosts.length === 0 ? (
+                    <p className="empty-text">Постов пока нет</p>
+                ) : (
+                    <ul className="post-list">
+                        {filteredPosts.map((post, index) => (
+                            <li
+                                key={post.id}
+                                className="post-card"
+                                style={{ animationDelay: `${index * 0.1}s` }}
+                            >
+                                <div className="post-left">
+                                    {post.image ? (
+                                        <div className="post-image">
+                                            <img src={post.image} alt={post.title} />
+                                        </div>
+                                    ) : (
+                                        <div className="placeholder-img">No Image</div>
+                                    )}
+                                    <div className="post-content">
+                                        <h2>{post.title}</h2>
+                                        <p className="post-subtext">
+                                            {post.content || formatDate(post.created_at)}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="post-actions">
+                                    <span className="likes">❤️ {post.likes}</span>
+                                    <div className="action-buttons">
+                                        <Link to={`/edit/${post.id}`} className="edit-btn">
+                                            Редактировать
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDelete(post.id)}
+                                            className="delete-btn"
+                                        >
+                                            Удалить
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+        </main>
+    );
+}

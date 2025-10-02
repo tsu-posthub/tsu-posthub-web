@@ -3,11 +3,10 @@ import { AuthProvider } from "./context/AuthContext";
 
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
-import FeedPage from "./pages/Feed/FeedPage";
 import PostPage from "./pages/Post/PostPage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import Layout from "./components/Layout.tsx";
-import Loader from "./components/Loader.tsx";
+import PostsPage from "./pages/Post/PostsPage.tsx";
 
 function App() {
     return (
@@ -15,10 +14,9 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route element={<Layout />}>
-                        <Route path="/" element={<FeedPage />} />
+                        <Route path="/" element={<PostsPage />} />
                         <Route path="/posts/:id" element={<PostPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/create" element={<Loader />} />
                     </Route>
                     
                     <Route path="/login" element={<LoginPage />} />
