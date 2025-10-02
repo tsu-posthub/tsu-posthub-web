@@ -318,6 +318,32 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.pagination button {
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.pagination button.active {
+    background-color: #646cff;
+    color: #fff;
+    border-color: #646cff;
+}
+
+.pagination button:hover:not(.active) {
+    background-color: #f0f0f0;
+}
+
 @media (max-width: 1200px) { .myposts-content { max-width: 95%; } }
 @media (max-width: 1024px) {
     .myposts-content {

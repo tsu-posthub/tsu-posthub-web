@@ -1,7 +1,17 @@
 ﻿import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import {ArrowDown, ArrowUp, Calendar, Edit2, Heart, Plus, Search, Trash2, X} from "lucide-react";
+import {
+    ArrowDown,
+    ArrowUp,
+    Calendar,
+    Edit2,
+    Heart,
+    Plus,
+    Search,
+    Trash2,
+    X,
+} from "lucide-react";
 import CustomSelect from "../../components/CustomSelect";
 import "./Posts.css";
 
@@ -22,48 +32,56 @@ export default function PostsPage() {
     const [animationKey, setAnimationKey] = useState(0);
     const [sortType, setSortType] = useState("Дате");
     const [sortDirection, setSortDirection] = useState("По убыванию");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(5);
+    const [totalPosts, setTotalPosts] = useState(0);
+
     const navigate = useNavigate();
+
+    const fetchPosts = async (page = 1) => {
+        try {
+            setLoading(true);
+            const data = await sdk.posts.listPosts({
+                page,
+                page_size: pageSize,
+            });
+            const currentUsername = localStorage.getItem("username");
+
+            const mappedPosts: PostType[] = data.results
+                .filter((p: any) => p.author_username === currentUsername)
+                .map((p: any) => ({
+                    id: p.id,
+                    title: p.title,
+                    content: p.preview_text,
+                    likes: p.likes_count,
+                    created_at: p.created_at,
+                    image: p.thumbnail
+                        ? `https://api.tsu-posthub.orexi4.ru/${p.thumbnail}`
+                        : undefined,
+                }));
+
+            setPosts(mappedPosts);
+            setTotalPosts(data.count);
+            setCurrentPage(page);
+        } catch (err) {
+            console.error("Ошибка загрузки постов", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (!accessToken) {
             navigate("/login");
             return;
         }
-
-        const fetchPosts = async () => {
-            try {
-                setLoading(true);
-                const data = await sdk.posts.listPosts();
-                const currentUsername = localStorage.getItem("username");
-
-                const mappedPosts: PostType[] = data
-                    .filter((p: any) => p.author_username === currentUsername)
-                    .map((p: any) => ({
-                        id: p.id,
-                        title: p.title,
-                        content: p.preview_text,
-                        likes: p.likes_count,
-                        created_at: p.created_at,
-                        image: p.thumbnail
-                            ? `https://api.tsu-posthub.orexi4.ru/${p.thumbnail}`
-                            : undefined,
-                    }));
-
-                setPosts(mappedPosts);
-            } catch (err) {
-                console.error("Ошибка загрузки постов", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         (async () => {
             await fetchPosts();
         })();
     }, [sdk]);
 
     useEffect(() => {
-        setAnimationKey(prev => prev + 1);
+        setAnimationKey((prev) => prev + 1);
     }, [search, sortType, sortDirection]);
 
     const handleDelete = async (id: number) => {
@@ -71,6 +89,7 @@ export default function PostsPage() {
         try {
             await sdk.posts.deletePost(id);
             setPosts(posts.filter((p) => p.id !== id));
+            setTotalPosts((prev) => prev - 1);
         } catch (err) {
             alert("Ошибка удаления поста");
         }
@@ -84,7 +103,9 @@ export default function PostsPage() {
         return [...list].sort((a, b) => {
             let comp = 0;
             if (sortType === "Дате") {
-                comp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+                comp =
+                    new Date(a.created_at).getTime() -
+                    new Date(b.created_at).getTime();
             } else if (sortType === "Лайкам") {
                 comp = a.likes - b.likes;
             }
@@ -92,7 +113,9 @@ export default function PostsPage() {
         });
     };
 
-    const displayPosts = search ? sortPosts(filteredPosts) : sortPosts(posts);
+    const displayPosts = search
+        ? sortPosts(filteredPosts)
+        : sortPosts(posts);
 
     const formatDate = (dateString: string) =>
         new Date(dateString).toLocaleDateString("ru-RU", {
@@ -102,19 +125,37 @@ export default function PostsPage() {
         });
 
     const formatLikes = (num: number) => {
-        if (num >= 1_000_000_000_000) return (num / 1_000_000_000_000).toFixed(1).replace(/\.0$/, '') + 't';
-        if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'b';
-        if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'm';
-        if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+        if (num >= 1_000_000_000_000)
+            return (
+                (num / 1_000_000_000_000).toFixed(1).replace(/\.0$/, "") +
+                "t"
+            );
+        if (num >= 1_000_000_000)
+            return (
+                (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "b"
+            );
+        if (num >= 1_000_000)
+            return (
+                (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "m"
+            );
+        if (num >= 1_000)
+            return (
+                (num / 1_000).toFixed(1).replace(/\.0$/, "") + "k"
+            );
         return num.toString();
     };
+
+    const totalPages = Math.ceil(totalPosts / pageSize);
 
     return (
         <main className="myposts-page">
             <div className="myposts-content">
                 <div className="myposts-header">
                     <h1>Мои посты</h1>
-                    <button className="create-btn" onClick={() => navigate("/create")}>
+                    <button
+                        className="create-btn"
+                        onClick={() => navigate("/create")}
+                    >
                         <Plus size={16} />
                         Создать
                     </button>
@@ -130,7 +171,10 @@ export default function PostsPage() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         {search && (
-                            <button className="clear-btn" onClick={() => setSearch("")}>
+                            <button
+                                className="clear-btn"
+                                onClick={() => setSearch("")}
+                            >
                                 <X size={18} />
                             </button>
                         )}
@@ -148,8 +192,14 @@ export default function PostsPage() {
                         />
                         <CustomSelect
                             options={[
-                                { label: "По возрастанию", icon: <ArrowUp size={16} /> },
-                                { label: "По убыванию", icon: <ArrowDown size={16} /> },
+                                {
+                                    label: "По возрастанию",
+                                    icon: <ArrowUp size={16} />,
+                                },
+                                {
+                                    label: "По убыванию",
+                                    icon: <ArrowDown size={16} />,
+                                },
                             ]}
                             defaultValue={sortDirection}
                             onChange={setSortDirection}
@@ -163,52 +213,92 @@ export default function PostsPage() {
                 ) : displayPosts.length === 0 ? (
                     <p className="empty-text">Постов пока нет</p>
                 ) : (
-                    <ul className="post-list">
-                        {displayPosts.map((post, index) => (
-                            <li
-                                key={`${post.id}-${animationKey}`}
-                                className="post-card"
-                                style={{ animationDelay: `${index * 0.1}s` }}
-                            >
-                                <div className="post-left">
-                                    {post.image ? (
-                                        <div className="post-image">
-                                            <img src={post.image} alt={post.title} />
+                    <>
+                        <ul className="post-list">
+                            {displayPosts.map((post, index) => (
+                                <li
+                                    key={`${post.id}-${animationKey}`}
+                                    className="post-card"
+                                    style={{
+                                        animationDelay: `${index * 0.1}s`,
+                                    }}
+                                >
+                                    <div className="post-left">
+                                        {post.image ? (
+                                            <div className="post-image">
+                                                <img
+                                                    src={post.image}
+                                                    alt={post.title}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="placeholder-img">
+                                                No Image
+                                            </div>
+                                        )}
+                                        <div className="post-content">
+                                            <h2>{post.title}</h2>
+                                            <p className="post-subtext">
+                                                {post.content ||
+                                                    formatDate(post.created_at)}
+                                            </p>
                                         </div>
-                                    ) : (
-                                        <div className="placeholder-img">No Image</div>
-                                    )}
-                                    <div className="post-content">
-                                        <h2>{post.title}</h2>
-                                        <p className="post-subtext">
-                                            {post.content || formatDate(post.created_at)}
-                                        </p>
                                     </div>
-                                </div>
-                                <div className="post-actions">
-                                    <span className="likes">
-                                        <Heart size={16} fill="#e74c3c" color="#e74c3c" />
-                                        {formatLikes(post.likes)}
-                                    </span>
-                                    <div className="action-buttons">
-                                        <Link to={`/edit/${post.id}`} className="edit-btn">
-                                            Редактировать
-                                        </Link>
-                                        <button className="edit-icon-btn" title="Редактировать">
-                                            <Edit2 size={18} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(post.id)}
-                                            className="delete-btn"
-                                            title="Удалить"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
+                                    <div className="post-actions">
+                                        <span className="likes">
+                                            <Heart
+                                                size={16}
+                                                fill="#e74c3c"
+                                                color="#e74c3c"
+                                            />
+                                            {formatLikes(post.likes)}
+                                        </span>
+                                        <div className="action-buttons">
+                                            <Link
+                                                to={`/edit/${post.id}`}
+                                                className="edit-btn"
+                                            >
+                                                Редактировать
+                                            </Link>
+                                            <button
+                                                className="edit-icon-btn"
+                                                title="Редактировать"
+                                            >
+                                                <Edit2 size={18} />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    handleDelete(post.id)
+                                                }
+                                                className="delete-btn"
+                                                title="Удалить"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {totalPages > 1 && (
+                            <div className="pagination">
+                                {Array.from({ length: totalPages }, (_, i) => (
+                                    <button
+                                        key={i + 1}
+                                        className={
+                                            currentPage === i + 1
+                                                ? "active"
+                                                : ""
+                                        }
+                                        onClick={() => fetchPosts(i + 1)}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </main>
